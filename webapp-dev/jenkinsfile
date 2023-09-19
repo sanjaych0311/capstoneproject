@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -16,9 +16,8 @@ pipeline {
                     }
                 }
             }
-            }
         }
-        
+
         stage('Build') {
             steps {
                 // Build the application (e.g., npm build, Maven, etc.)
@@ -26,14 +25,14 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        
+
         stage('Test') {
             steps {
                 // Run unit tests (e.g., Jest, JUnit, etc.)
                 sh 'npm test'
             }
         }
-        
+
         stage('Deploy to Staging') {
             when {
                 branch 'testing'
@@ -43,7 +42,7 @@ pipeline {
                 sh './deploy-staging.sh'
             }
         }
-        
+
         stage('Deploy to Production') {
             when {
                 branch 'production'
@@ -55,5 +54,4 @@ pipeline {
         }
     }
 }
-
 
