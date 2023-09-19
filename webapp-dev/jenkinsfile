@@ -4,38 +4,43 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Checkout code from Git repository
                 checkout scm
             }
         }
-	stage('Install Maven') {
-  	  steps {
-        	sh 'apt-get update && apt-get install -y maven'
-	    }
-	}
 
-	
         stage('Build') {
             steps {
-                sh '''
-         mvn clean package
-         cd target
-         cp ../src/main/resources/web.config web.config
-         cp todo-app-java-on-azure-1.0-SNAPSHOT.jar app.jar 
-         zip todo.zip app.jar web.config
-      '''  // Build using Maven, adjust as needed
+                // Install dependencies and build the application
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'  // Run unit tests, adjust as needed
+                // Run unit tests
+                sh 'npm test'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Staging') {
+            when {
+                branch 'testing'
+            }
             steps {
-                // Add deployment steps here
-		sh 'kubectl apply -f deployment.yaml' // Example Kubernetes deployment
+                // Deploy to the staging environment (use appropriate deployment script)
+                sh './deploy-staging.sh'
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                branch 'production'
+            }
+            steps {
+                // Deploy to the production environment (use appropriate deployment script)
+                sh './deploy-production.sh'
             }
         }
     }
