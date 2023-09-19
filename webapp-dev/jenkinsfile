@@ -12,6 +12,9 @@ pipeline {
         stage('Build') {
             steps {
                 // Install dependencies and build the application
+		tools {
+            nodejs 'NodeJS 14'
+       		 }
                 sh 'npm install'
                 sh 'npm run build'
             }
