@@ -6,11 +6,12 @@ pipeline {
             steps {
                 // Checkout code from Git repository
                 script {
-                    withCredentials([string(credentialsId: 'webappcredentials', variable: 'GIT_TOKEN')]) {
+                    def gitCredentials = credentials('webappcredentials')  // Use the ID you specified in Step 2
+                    withCredentials([usernamePassword(credentialsId: gitCredentials, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         sh """
                             git config --global credential.helper 'store --file=$HOME/.git-credentials'
-                            git ls-remote -h https://github.com/sanjaych0311/capstoneproject.git HEAD
-                            git clone https://${GIT_TOKEN}@github.com/sanjaych0311/capstoneproject.git
+                            git ls-remote -h https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/sanjaych0311/capstoneproject.git HEAD
+                            git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/sanjaych0311/capstoneproject.git
                         """
                     }
                 }
