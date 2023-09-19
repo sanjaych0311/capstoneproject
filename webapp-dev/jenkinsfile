@@ -23,6 +23,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Add deployment steps here
+		sh 'kubectl apply -f deployment.yaml' // Example Kubernetes deployment
             }
         }
     }
