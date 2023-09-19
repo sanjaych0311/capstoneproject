@@ -1,22 +1,49 @@
 pipeline {
     agent any
+    
     stages {
         stage('Checkout') {
             steps {
+                // Checkout code from Git repository
                 checkout scm
             }
         }
+        
         stage('Build') {
             steps {
-                sh 'npm install'  # Install project dependencies
-                sh 'npm run build' # Build your application (e.g., for production)
+                // Build the application (e.g., npm build, Maven, etc.)
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
+        
         stage('Test') {
             steps {
-                sh 'npm test'  # Run unit tests
+                // Run unit tests (e.g., Jest, JUnit, etc.)
+                sh 'npm test'
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                branch 'testing'
+            }
+            steps {
+                // Deploy to the staging environment
+                sh './deploy-staging.sh'
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                branch 'production'
+            }
+            steps {
+                // Deploy to the production environment
+                sh './deploy-production.sh'
             }
         }
     }
 }
+
 
